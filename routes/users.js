@@ -1,7 +1,13 @@
 var express = require('express');
 var router = express.Router();
-
+var ExpressJoi = require('express-joi-validator');
+var Joi = require('joi');
 var userController = require('../controllers/userController');
+
+
+var bodySchema = Joi.object({
+    name:Joi.string().required().error(new Error("Please enter name"))
+});
 
 /* GET users listing. */
 // router.get('/', function(req, res, next) {
@@ -15,9 +21,11 @@ router.get('/cool', function (req, res, next) {
 });
 
 
-router.post('/store', userController.user_store);
-router.put('/:userId/update', userController.user_update);
-router.delete('/:userId', userController.user_delete);
 
+
+
+router.post('/store', ExpressJoi(bodySchema), userController.user_store);
+router.put('/:userId', userController.user_update);
+router.delete('/:userId', userController.user_delete);
 
 module.exports = router;
