@@ -3,7 +3,7 @@ var router = express.Router();
 var ExpressJoi = require('express-joi-validator');
 var Joi = require('joi');
 var userController = require('../controllers/userController');
-
+var getUser = require('../middleware/getUser');
 
 var bodySchema = Joi.object({
     name:Joi.string().required().error(new Error("Please enter name"))
@@ -24,8 +24,9 @@ router.get('/cool', function (req, res, next) {
 
 
 
-router.post('/store', ExpressJoi(bodySchema), userController.user_store);
-router.put('/:userId', userController.user_update);
+// router.post('/store', ExpressJoi(bodySchema), userController.user_store);
+router.post('/store', userController.user_store);
+router.put('/:userId', getUser, userController.user_update);
 router.delete('/:userId', userController.user_delete);
 
 module.exports = router;
